@@ -1,3 +1,3 @@
-**OSPPARIS 98P: Final Illusion**
+**OSPPARIS 96P: Final Illusion**
 
-<img width="1440" alt="Screenshot 2025-03-12 at 5 14 08 PM" src="https://github.com/user-attachments/assets/76981956-57c5-4064-a282-40eea97654cc" />
+<img width="1434" alt="Screenshot 2025-03-12 at 5 24 41 PM" src="https://github.com/user-attachments/assets/e237d45e-9063-4836-8567-96236b9010b3" />
