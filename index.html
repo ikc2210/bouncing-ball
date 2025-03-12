@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Striped Ball Color Blending</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="title">
+      <h1>OSPPARIS 98P: Ball Bounce</h1>
+      <h2>Created by Ina Chun</h2>
+    </div>
+
+    <canvas id="ballCanvas" width="700" height="350"></canvas>
+          
+    <div class="sections">
+        <div class="section-group">
+            <label for="color1">Color 1:</label>
+            <input type="color" id="color1" value="#ff0000">
+            
+            <label for="color2">Color 2:</label>
+            <input type="color" id="color2" value="#0000ff">
+        </div>
+        
+        <div class="section-group">
+            <label for="stripeWidth">Stripe Width: <span id="stripeWidthValue">10</span>px</label>
+            <input type="range" id="stripeWidth" min="2" max="30" value="10">
+            
+            <label for="speed">Ball Speed: <span id="speedValue">5</span></label>
+            <input type="range" id="speed" min="1" max="30" value="2">
+        </div>
+    </div>
+
+    <div class="sections">
+      <div class="section-group">
+        <h2>Suggested Colors: </h2>
+        <li>[ Combo 1 ] : #FF0000, #0000FF</li>
+        <li>[ Combo 2 ] : #00BFFF, #FF69B4</li>
+        <li>[ Combo 3 ] : #FF0000, #FFFF00</li>
+      </div>
+
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('ballCanvas');
+        const ctx = canvas.getContext('2d'); // context object for canvas
+        
+        const color1Input = document.getElementById('color1');
+        const color2Input = document.getElementById('color2');
+
+        const speedInput = document.getElementById('speed');
+        const speedValue = document.getElementById('speedValue');
+        const stripeWidthInput = document.getElementById('stripeWidth');
+        const stripeWidthValue = document.getElementById('stripeWidthValue'); 
+        
+        
+        let ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            radius: 50,
+            speedX: 2,
+            speedY: parseInt(speedInput.value),
+            stripeWidth: parseInt(stripeWidthInput.value),
+            color1: color1Input.value,
+            color2: color2Input.value,
+        };
+        
+        
+        function drawBall() {
+          ctx.save();
+          ctx.beginPath();
+          
+          ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+          ctx.clip();
+          
+          const stripeCount = Math.ceil(ball.radius * 2 / ball.stripeWidth);
+          
+          for (let i = 0; i < stripeCount; i++) {
+            ctx.fillStyle = i % 2 === 0 ? ball.color1 : ball.color2;
+            const y = ball.y - ball.radius + (i * ball.stripeWidth);
+            ctx.fillRect(ball.x - ball.radius, y, ball.radius * 2, ball.stripeWidth);
+          }
+          
+          ctx.restore();
+          
+          ctx.beginPath();
+          ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+          ctx.strokeStyle = '#333';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+        
+        function updateBallPos() {
+          ball.x += ball.speedX;
+          ball.y += ball.speedY;
+          
+          const x_pos_left = ball.x - ball.radius;
+          const x_pos_right = ball.x + ball.radius;
+          const y_pos_top = ball.y - ball.radius;
+          const y_pos_bottom = ball.y + ball.radius;
+
+          // adjust direction to mimic bounces
+          if (x_pos_left < 0 || x_pos_right > canvas.width) {
+            ball.speedX = -ball.speedX;
+          }
+          
+          if (y_pos_top < 0 || y_pos_bottom > canvas.height) {
+            ball.speedY = -ball.speedY;
+          }
+        }
+
+        function updateValueTexts() {
+            stripeWidthValue.textContent = stripeWidthInput.value;
+            speedValue.textContent = speedInput.value;
+        }
+        
+        function runSimulation() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          
+          ball.speedY = parseInt(speedInput.value) * (ball.speedY > 0 ? 1 : -1);
+          ball.stripeWidth = parseInt(stripeWidthInput.value);
+          ball.color1 = color1Input.value;
+          ball.color2 = color2Input.value;
+            
+          updateBallPos();
+          drawBall();
+          requestAnimationFrame(runSimulation);
+        }
+        
+        color1Input.addEventListener('input', updateValueTexts);
+        color2Input.addEventListener('input', updateValueTexts);
+        speedInput.addEventListener('input', updateValueTexts);
+        stripeWidthInput.addEventListener('input', updateValueTexts);
+        
+        updateValueTexts();
+        runSimulation();
+    </script>
+</body>
+</html>
